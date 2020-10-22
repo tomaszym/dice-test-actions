@@ -34,7 +34,7 @@ licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 publishMavenStyle := true
 description := "Immutable, PCG-based random numbers generator"
 
-Keys.credentials += {
+credentials += {
   if (sys.env.isDefinedAt("CI_SERVER")) {
     Credentials(
       realm = "Sonatype Nexus Repository Manager",
@@ -43,8 +43,9 @@ Keys.credentials += {
       passwd = sys.env.apply("SONATYPE_PASSWORD")
     )
   } else {
-    Credentials(Path.userHome / ".sbt" / "sonatypeCredentials")
-  }}
+    Credentials(Path.userHome / ".sbt" / ".sonatype")
+  }
+}
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
