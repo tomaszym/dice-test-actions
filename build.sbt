@@ -26,7 +26,31 @@ useJGit
 git.useGitDescribe := true
 git.gitTagToVersionNumber := { tag: String => Some(tag)}
 
-updateOptions := updateOptions.value.withGigahorse(false)
+organization := "games.datastrophic"
+homepage := Some(url("https://github.com/datastrophic-games/dice"))
+scmInfo := Some(ScmInfo(url("https://github.com/datastrophic-games/dice"), "git@github.com:datastrophic-games/dice.git"))
+developers := List(Developer("tomaszym", "tomaszym", "tomaszym@pm.me", url("https://github.com/tomaszym")))
+licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
+publishMavenStyle := true
+description := "Immutable, PCG-based random numbers generator"
+
+Keys.credentials += {
+  if (sys.env.isDefinedAt("CI_SERVER")) {
+    Credentials(
+      realm = "Sonatype Nexus Repository Manager",
+      host = "oss.sonatype.org",
+      userName = sys.env.apply("SONATYPE_USER"),
+      passwd = sys.env.apply("SONATYPE_PASSWORD")
+    )
+  } else {
+    Credentials(Path.userHome / ".sbt" / "sonatypeCredentials")
+  }}
+
+publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
+  else Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
 
 
 def priorTo2_13(scalaVersion: String): Boolean =
