@@ -6,7 +6,7 @@ Because `rollInt` > `nextInt`.
 ## 🎲 Usage 🎲
 sbt:
 ```scala
-"games.datastrophic" %% "dice" % "0.2.0",
+"games.datastrophic" %% "dice" % "0.2.2",
 ```
 An example:
 ```scala
