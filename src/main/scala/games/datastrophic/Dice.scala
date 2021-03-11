@@ -9,7 +9,7 @@ package games.datastrophic
 import scala.annotation.tailrec
 import scala.util.Random
 
-case class Dice(state: Long) {
+case class Dice private (state: Long) {
 
   private def roll32Bits: (Dice, Int) = {
     val xorShifted = (((state >>> 18) ^ state) >>> 27).toInt
@@ -106,7 +106,7 @@ case class Dice(state: Long) {
   def oneOf[A](ax: Seq[A]): Option[A] = rollOneOf(ax).map(_._2)
 
   /** 2k10 means two rolls with dice which results in 1-10*/
-  def rollK(roll: KRoll): (Dice, Int) = {
+  def rollK(roll: DRoll): (Dice, Int) = {
 
     @tailrec
     def it(rollsLeft: Int, acc: Int, dice: Dice): (Dice, Int) = {
@@ -118,11 +118,13 @@ case class Dice(state: Long) {
     it(roll.dices, 0, this)
   }
 
-  def nextK(roll: KRoll): Int = rollK(roll)._2
+  def nextK(roll: DRoll): Int = rollK(roll)._2
 
 }
 
 object Dice {
+
+  def apply(seed: Long): Dice = new Dice(seed).roll64Bits._1
 
   def unsafeRandom: Dice = Dice(Random.nextLong)
 

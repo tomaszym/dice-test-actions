@@ -2,9 +2,9 @@ name := "dice"
 
 organization := "games.datastrophic"
 
-scalaVersion := "2.13.2"
+scalaVersion := "2.13.5"
 
-crossScalaVersions := List("2.12.11", "2.13.2")
+crossScalaVersions := List("2.12.13", "2.13.5")
 
 scalacOptions := Seq(
   "-encoding", "UTF-8", "-target:jvm-1.8", "-deprecation", "-feature", "-Xmacro-settings:materialize-derivations",
@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
 
 )
 
-addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0"  cross CrossVersion.full)
+addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.3"  cross CrossVersion.full)
 
 enablePlugins(GitVersioning)
 

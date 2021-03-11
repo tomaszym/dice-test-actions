@@ -6,12 +6,12 @@
 
 package games.datastrophic
 
-case class KRoll(
+case class DRoll(
   dices: Int,
   pips: Int,
   modifier: Int
 )
 
-object KRoll {
-  def k100: KRoll = KRoll(1,100,0)
+object DRoll {
+  def k100: DRoll = DRoll(1,100,0)
 }
