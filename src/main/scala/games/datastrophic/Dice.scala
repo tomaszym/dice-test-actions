@@ -15,12 +15,12 @@ case class Dice private (state: Long) {
     val xorShifted = (((state >>> 18) ^ state) >>> 27).toInt
     val rot = (state >>> 59).toInt
 
-    (Dice(state * Dice.MULTIPLIER + Dice.INCREMENT), Integer.rotateRight(xorShifted, rot))
+    (new Dice(state * Dice.MULTIPLIER + Dice.INCREMENT), Integer.rotateRight(xorShifted, rot))
   }
 
   private def roll64Bits: (Dice, Long) = {
-    val (d, i) = rollBits(32)
-    val (d2, i2) = d.rollBits(32)
+    val (d, i) = roll32Bits
+    val (d2, i2) = d.roll32Bits
 
     val l = (i << 32) + i2
     (d2, l)
