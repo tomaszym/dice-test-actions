@@ -35,7 +35,7 @@ case class Dice private (state: Long) {
 
   def rollInt(bound: Int): (Dice, Int) = {
     val (d, i) = roll32Bits
-    (d, i % bound)
+    (d, i % bound abs)
   }
   def nextInt(bound: Int): Int = rollInt(bound)._2
 
