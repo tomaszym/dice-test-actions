@@ -19,8 +19,10 @@ object BoxMuller {
     a: Double,
     b: Double,
   ): (Double, Double) = {
-    val x = Math.sqrt(-2.0 * Math.log(a)) * Math.cos(twicePI * b)
-    val y = Math.sqrt(-2.0 * Math.log(a)) * Math.sin(twicePI * b)
+
+    val sqrtLogA = Math.sqrt(-2.0 * Math.log(a))
+    val x = sqrtLogA * Math.cos(twicePI * b)
+    val y = sqrtLogA * Math.sin(twicePI * b)
 
     (x,y)
   }

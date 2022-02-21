@@ -15,14 +15,15 @@ case class Dice private (state: Long) {
     val xorShifted = (((state >>> 18) ^ state) >>> 27).toInt
     val rot = (state >>> 59).toInt
 
-    (new Dice(state * Dice.MULTIPLIER + Dice.INCREMENT), Integer.rotateRight(xorShifted, rot))
+    (new Dice(state * Dice.MULTIPLIER + Dice.INCREMENT), Integer.rotateRight(xorShifted, rot | 1))
   }
 
   private def roll64Bits: (Dice, Long) = {
     val (d, i) = roll32Bits
     val (d2, i2) = d.roll32Bits
 
-    val l = (i << 32) + i2
+    val l = ((i.toLong & Dice.MASK)  << 32) | (i2.toLong & Dice.MASK)
+
     (d2, l)
   }
 
@@ -32,6 +33,7 @@ case class Dice private (state: Long) {
   }
 
   def rollIntMaxValue: (Dice, Int) = roll32Bits
+  def rollLongMaxValue: (Dice, Long) = roll64Bits
 
   def rollInt(bound: Int): (Dice, Int) = {
     val (d, i) = roll32Bits
@@ -45,6 +47,8 @@ case class Dice private (state: Long) {
   }
 
   def rollNormal(standardDeviation: Double, expectedValue: Double): (Dice, (Double, Double)) = {
+
+    if(standardDeviation < 0) throw new IllegalArgumentException(s"standard deviation has to be nonegative, got ${standardDeviation}")
 
     val (diceA, a) = rollDouble
 
@@ -124,14 +128,35 @@ case class Dice private (state: Long) {
 
 object Dice {
 
-  def apply(seed: Long): Dice = new Dice(seed).roll64Bits._1
+  def apply(seed: Long): Dice = new Dice(seed * Dice.MULTIPLIER + Dice.INCREMENT)
 
   def unsafeRandom: Dice = Dice(Random.nextLong)
 
   private val DOUBLE_UNIT = 1.0 / (1L << 53)
 
-  private val INCREMENT = 123456789
+  private val INCREMENT = 0xda3e39cb94b95bdbL
 
-  private val MULTIPLIER = 6364136223846793005L
+  private val MULTIPLIER = 0x5851f42d4c957f2dL
+
+
+  // 2^31 + Int.MaxValue
+  // needed because Int/Long are signed and we are the bad guys using them as 32/64 bit sequence
+  // and doing .toLong / .asInstanceOf preserves represented values changing underlying bits
+
+  /**
+   * has value of 2^31 + Int.MaxValue
+   *
+   * needed because Int/Long are signed and we are the bad guys using them as 32/64 bit sequence
+   * and doing .toLong / .asInstanceOf preserves represented values changing underlying bits
+   * ie for negative values it left-fills with ones
+   * three/six bits examples:
+   * positive, no problem: 010 (2, three bits) => 000010 (2, six bits)
+   * negative, problem:  110 (-2, three bits) => 111110(-2, six bits)
+   * mask: 000111
+   * 111110 & 000111 => 000111
+   *
+   * todo anything simpler? scodec?
+   */
+  private val MASK = 4294967295L // 0x00000000ffffffffL
 
 }

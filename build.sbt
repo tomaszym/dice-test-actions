@@ -15,10 +15,11 @@ scalacOptions ++= (if (priorTo2_13(scalaVersion.value)) Seq("-Ypartial-unificati
 javaOptions +="-Duser.timezone=GMT"
 
 libraryDependencies ++= Seq(
-  "org.scalacheck" %% "scalacheck" % "1.15.4" % Test
+  "org.scalacheck" %% "scalacheck" % "1.15.4" % Test,
+  "org.scalanlp" %% "breeze" % "2.0.1-RC1" % Test,
 )
 
-addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.3"  cross CrossVersion.full)
+addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.13.2"  cross CrossVersion.full)
 
 enablePlugins(GitVersioning)
 

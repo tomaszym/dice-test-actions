@@ -10,7 +10,9 @@ case class DRoll(
   dices: Int,
   pips: Int,
   modifier: Int
-)
+) {
+  def max: Int = dices * pips + modifier
+}
 
 object DRoll {
   def k100: DRoll = DRoll(1,100,0)
