@@ -2,9 +2,9 @@ name := "dice"
 
 organization := "games.datastrophic"
 
-scalaVersion := "2.13.5"
+scalaVersion := "2.13.8"
 
-crossScalaVersions := List("2.12.13", "2.13.5")
+crossScalaVersions := List("2.12.15", "2.13.8")
 
 scalacOptions := Seq(
   "-encoding", "UTF-8", "-target:jvm-1.8", "-deprecation", "-feature", "-Xmacro-settings:materialize-derivations",
