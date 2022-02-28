@@ -128,7 +128,21 @@ case class Dice private (state: Long) {
 
 object Dice {
 
+  @deprecated("This is ambiguous. Use either `fromSeed` or `fromState`", "0.2.6")
   def apply(seed: Long): Dice = new Dice(seed * Dice.MULTIPLIER + Dice.INCREMENT)
+
+  /** Turn any value into new random. If you deserialize use `fromState`.
+   *
+   * @param seed assumes this value is not random enough, will be shuffled.
+   */
+  def fromSeed(seed: Long): Dice = new Dice(seed * Dice.MULTIPLIER + Dice.INCREMENT)
+
+  /** Create a `Dice` from a number that you know is random enough. Suitable for deserialization.
+   *
+   * @param state
+   * @return
+   */
+  def fromState(state: Long): Dice = new Dice(state)
 
   def unsafeRandom: Dice = Dice(Random.nextLong)
 
