@@ -12,6 +12,12 @@ case class DRoll(
   modifier: Int
 ) {
   def max: Int = dices * pips + modifier
+
+  def isAlwaysZero: Boolean = this match {
+    case DRoll(0, _, 0) => true
+    case DRoll(_, 0, 0) => true
+    case _: DRoll => false
+  }
 }
 
 object DRoll {
