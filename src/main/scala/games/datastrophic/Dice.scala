@@ -109,8 +109,12 @@ case class Dice private (state: Long) {
 
   def oneOf[A](ax: Seq[A]): Option[A] = rollOneOf(ax).map(_._2)
 
+
+  @deprecated("use roll instead", "2.8.0")
+  def rollK(r: DRoll): (Dice, Int) = roll(r)
+
   /** 2k10 means two rolls with dice which results in 1-10*/
-  def rollK(roll: DRoll): (Dice, Int) = {
+  def roll(roll: DRoll): (Dice, Int) = {
 
     @tailrec
     def it(rollsLeft: Int, acc: Int, dice: Dice): (Dice, Int) = {
@@ -122,7 +126,7 @@ case class Dice private (state: Long) {
     it(roll.dices, 0, this)
   }
 
-  def nextK(roll: DRoll): Int = rollK(roll)._2
+  def nextK(roll: DRoll): Int = roll(roll)._2
 
 }
 
