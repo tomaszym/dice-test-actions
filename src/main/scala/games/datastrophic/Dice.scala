@@ -126,7 +126,7 @@ case class Dice private (state: Long) {
     it(roll.dices, 0, this)
   }
 
-  def nextK(roll: DRoll): Int = roll(roll)._2
+  def nextK(r: DRoll): Int = roll(r)._2
 
 }
 
