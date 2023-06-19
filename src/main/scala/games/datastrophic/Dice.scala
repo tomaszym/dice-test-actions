@@ -27,10 +27,10 @@ case class Dice private (state: Long) {
     (d2, l)
   }
 
-  private def rollBits(bits: Int) = {
-    val (next, result) = roll32Bits
-    (next, result >>> 32-bits)
-  }
+//  def rollBits(bits: Int): (Dice, Int) = {
+//    val (next, result) = roll32Bits
+//    (next, result >>> 32-bits)
+//  }
 
   def rollIntMaxValue: (Dice, Int) = roll32Bits
   def rollLongMaxValue: (Dice, Long) = roll64Bits
@@ -148,7 +148,7 @@ object Dice {
    */
   def fromState(state: Long): Dice = new Dice(state)
 
-  def unsafeRandom: Dice = Dice(Random.nextLong)
+  def unsafeRandom: Dice = Dice.fromSeed(Random.nextLong())
 
   private val DOUBLE_UNIT = 1.0 / (1L << 53)
 

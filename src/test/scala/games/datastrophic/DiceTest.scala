@@ -6,10 +6,17 @@ class DiceTest extends Properties("ChancesConfig") {
 
   property("for any positive n rollInt 0 <= result < n ") = forAll { (seed: Long, limit: Int) =>
     (limit > 0) ==> {
-      val result = Dice(seed).rollInt(limit)._2
+      val result = Dice.fromSeed(seed).rollInt(limit)._2
 
       (result >= 0) && (result < limit)
     }
+  }
+
+  property ("rollDouble 0 <= result <= 1 ") = forAll { (seed: Long) =>
+
+    val result = Dice.fromSeed(seed).rollDouble._2
+
+    (result >= 0) && (result <= 1)
   }
 
   property("observe normal distirbution's standard deviation") = forAll { (seed: Long, expectedValue: Int, stdDev: Int) =>

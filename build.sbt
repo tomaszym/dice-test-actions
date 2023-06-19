@@ -2,27 +2,47 @@ name := "dice"
 
 organization := "games.datastrophic"
 
-scalaVersion := "2.13.8"
+scalaVersion := "3.0.0"
 
-crossScalaVersions := List("2.12.15", "2.13.8")
+crossScalaVersions := List("2.13.11", "3.3.0")
 
 scalacOptions := Seq(
-  "-encoding", "UTF-8", "-target:jvm-1.8", "-deprecation", "-feature", "-Xmacro-settings:materialize-derivations",
+  "-encoding", "UTF-8", "-deprecation", "-feature",
   "-unchecked", "-language:implicitConversions", "-language:postfixOps", "-language:higherKinds")
-
-scalacOptions ++= (if (priorTo2_13(scalaVersion.value)) Seq("-Ypartial-unification") else Nil)
 
 javaOptions +="-Duser.timezone=GMT"
 
 libraryDependencies ++= Seq(
-  "org.scalacheck" %% "scalacheck" % "1.15.4" % Test,
-  "org.scalanlp" %% "breeze" % "2.0.1-RC1" % Test,
+  "org.scalacheck" %% "scalacheck" % "1.17.0" % Test,
+  "org.scalanlp" %% "breeze" % "2.1.0" % Test,
 )
 
-addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.13.2"  cross CrossVersion.full)
+scalacOptions ++= {
+  Seq(
+    "-encoding",
+    "UTF-8",
+    "-feature",
+    "-language:implicitConversions",
+    // disabled during the migration
+    // "-Xfatal-warnings"
+  ) ++
+    (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((3, _)) => Seq(
+        "-unchecked",
+        "-source:3.0-migration"
+      )
+      case _ => Seq(
+        "-deprecation",
+        "-Xfatal-warnings",
+        "-Wunused:imports,privates,locals",
+        "-Wvalue-discard"
+      )
+    })
+}
+
+//addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.13.2"  cross CrossVersion.full)
 
 enablePlugins(GitVersioning)
-
 useJGit
 git.useGitDescribe := true
 git.gitTagToVersionNumber := { tag: String => Some(tag)}
@@ -49,10 +69,3 @@ credentials += {
 }
 
 publishTo := sonatypePublishToBundle.value
-
-
-def priorTo2_13(scalaVersion: String): Boolean =
-  CrossVersion.partialVersion(scalaVersion) match {
-    case Some((2, minor)) if minor < 13 => true
-    case _                              => false
-  }
