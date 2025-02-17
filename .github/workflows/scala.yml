@@ -1,0 +1,36 @@
+name: Scala CI
+
+on:
+  push:
+    branches: [ "main" ]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'sbt'
+    - name: Run tests
+      run: sbt test
+    - name: Set envs
+      shell: bash
+      run: |
+        cat version.txt
+        echo "github.sha ${{ github.sha }}"
+        echo "github.event ${{ github.event }}"
+        echo "github.event.comment ${{ github.event.comment }}"
+        echo "github.event.comment.pull_request ${{ github.event.comment.pull_request }}"
+        echo "github.event.comment.pull_request.head ${{ github.event.comment.pull_request.head }}"
+        echo "github.event.comment.pull_request.head.sha ${{ github.event.comment.pull_request.head.sha }}"
